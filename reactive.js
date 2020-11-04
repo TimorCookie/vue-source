@@ -37,22 +37,13 @@ function observe (data) {
     defineReactive(data, key, data[key])
   })
 }
-const test = {
-  foo: 'foo',
-  bar: 'bar',
-  baz: {
-    a: 4
-  }
-}
 
-// defineReactive(test, 'foo', 'fooval')
-observe(test)
-// test.foo
-// test.bar
-// test.foo = 'fooooooooo'
-// test.bar = 'barrrrr'
-// test.baz.a
-test.foo={
-  f1: '666'
+/**
+ * 添加新属性
+ * @param {*} obj 
+ * @param {*} key 
+ * @param {*} val 
+ */
+function $set (obj, key, val){
+  defineReactive(obj, key, val)
 }
-test.foo.f1
