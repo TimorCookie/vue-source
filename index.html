@@ -7,13 +7,19 @@
   <script src="./tvue.js"></script>
 </head>
 <body>
-  <p>{{counter}}</p>
+  <div id="app">
+    <p>{{counter}}</p>
+    <h3 t-text="counter"></h3>
+    <div t-html="inner"></div>
+    <button>button</button>
+  </div>
 </body>
 <script>
   var app = new TVue({
     el: '#app',
     data: {
-      counter: 1
+      counter: 1,
+      inner: '<span style="color:red">Timokie</span>'
     }
   })
   setInterval(()=> {
