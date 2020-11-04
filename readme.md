@@ -11,11 +11,14 @@
 ​		MVVM 框架的三个要素：数据响应式、模版引擎及其渲染
 
   - 数据响应式：监听数据变化并在试图中更新（数据变更能够响应在视图中，就是数据响应式）
+
     		- Vue 2.x 版本： Object.defineProperty()
-        		- Vue 3.x 版本：Proxy
+        - Vue 3.x 版本：Proxy
   - 模版引擎：提供描述视图的模版语法
+
     		- 插值：{{}}
-        		- 指令：v-bind, v-on, v-model, v-for, v-if...
+        - 指令：v-bind, v-on, v-model, v-for, v-if...
+
   - 渲染：如何将模版转换为 html
     		- 模版 => vnode => dom
 
@@ -59,7 +62,7 @@ test.foo = 'foo'
 
 此时当我们运行 `node reactive.js` 后控制台输出结果
 
-![image-20201104112127669](/Users/timokie/Library/Application Support/typora-user-images/image-20201104112127669.png)
+![image-20201104112127669](https://tva1.sinaimg.cn/large/0081Kckwgy1gkd4wk7z1ij30jf04d74h.jpg)
 
 
 
@@ -158,7 +161,7 @@ test.foo = 'foo'
 
   node执行以上代码后控制台输出，证明目前对象属性自动拦截功能已经基本实现， 但嵌套对象仍旧是有问题的
 
-  ![image-20201104140010012](/Users/timokie/Library/Application Support/typora-user-images/image-20201104140010012.png)
+  ![image-20201104140010012](https://tva1.sinaimg.cn/large/0081Kckwgy1gkd4w6a3eqj30gv04ogno.jpg)
 
   
 
@@ -194,7 +197,7 @@ test.foo = 'foo'
 
   node 执行后控制台输出如下，说明我们实现了对嵌套对象数据存取侦测
 
-  ![image-20201104140851481](/Users/timokie/Library/Application Support/typora-user-images/image-20201104140851481.png)
+  ![image-20201104140851481](https://tva1.sinaimg.cn/large/0081Kckwgy1gkd4wepjh1j30gs03tdga.jpg)
 
 #### - 解决赋值是对象的问题
 
