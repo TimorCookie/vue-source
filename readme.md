@@ -62,7 +62,7 @@ test.foo = 'foo'
 
 此时当我们运行 `node reactive.js` 后控制台输出结果
 
-![image-20201104112127669](https://tva1.sinaimg.cn/large/0081Kckwgy1gkd4wk7z1ij30jf04d74h.jpg)
+  ![image-20201104112127669](https://tva1.sinaimg.cn/large/0081Kckwgy1gkd4wk7z1ij30jf04d74h.jpg)
 
 
 
@@ -197,7 +197,7 @@ test.foo = 'foo'
 
   node 执行后控制台输出如下，说明我们实现了对嵌套对象数据存取侦测
 
-  ![image-20201104140851481](https://tva1.sinaimg.cn/large/0081Kckwgy1gkd4wepjh1j30gs03tdga.jpg)
+  ![image-20201104140851481](https://tva1.sinaimg.cn/large/0081Kckwgy1gkd53ips3hj30gs03tjrl.jpg)
 
 #### - 解决赋值是对象的问题
 
