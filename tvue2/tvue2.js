@@ -71,19 +71,134 @@ class TVue {
   $mount (el) {
     // 获取宿主元素
     this.$el = document.querySelector(el)
-    console.log(this.$el)
     const updateComponent = () => {
        // 执行渲染函数
       const { render } = this.$options;
+
       // 真实dom操作版实现
-      const el = render.call(this);
-      const parent = this.$el.parentElement;
-      parent.insertBefore(el, this.$el.nextSibling);
-      parent.removeChild(this.$el);
-      this.$el = el;
+      // const el = render.call(this);
+      // const parent = this.$el.parentElement;
+      // parent.insertBefore(el, this.$el.nextSibling);
+      // parent.removeChild(this.$el);
+      // this.$el = el;
+
+      // vnode版本实现
+      const vnode = render.call(this, this.$createElement)
+      this._update(vnode)
     }
     // 创建一个 Watcher 实例
     new Watcher(this, updateComponent)
+  }
+  $createElement (tag, props, children) {
+    return {
+      tag,
+      props,
+      children
+    }
+  }
+  _update (vnode) {
+    const prevVnode = this._vnode
+    if (!prevVnode) {
+      this.__patch__(this.$el, vnode)
+    } else {
+      this.__patch__(prevVnode, vnode)
+    }
+  }
+  __patch__ (oldVnode, vnode) {
+    // oldVnode是dom
+    if (oldVnode.nodeType) {
+      const parent = oldVnode.parentElement
+      const refElm = oldVnode.nextSibling
+      // props
+      // children
+      const el = this.createElm(vnode)
+      parent.insertBefore(el, refElm)
+      parent.removeChild(oldVnode)
+    } else {
+      // update
+      // 获取dom
+      const el = vnode.el = oldVnode.el
+      if (oldVnode.tag === vnode.tag) {
+        const oldCh = oldVnode.children
+        const newCh = vnode.children
+
+        /**
+         * 新旧节点diff
+         * 1.新老节点都是string （文本更新）
+         * 2.新老节点都是数组（首尾diff）
+         * 3.新节点为数组，老节点为string（递归创建dom树）
+         * 4.新节点是string, 老节点是数组（直接将新节点赋值给老节点）
+         */
+        if (typeof newCh === 'string') {
+          if(typeof oldCh === 'string') {
+            // 新旧节点都是string且值不同 直接更新
+            if(newCh !== oldCh) {
+              el.textContent = newCh
+            }
+          } else {
+            el.textContent = newCh
+          }
+
+        } else {
+          // 1. 新的是数组，老的为文本(说明新增了子元素，需要递归创建新的dom树)
+          if (typeof oldCh === 'string') {
+            // 清空文本
+            oldCh.innerHTML = ''
+            newCh.forEach(vnode => this.createElm(vnode))
+          } else {
+            // 2.新老节点都是数组
+            this.updateChildren(el, oldCh, newCh)
+          }
+        }
+      }
+    }
+    this._vnode = vnode
+  }
+  // 递归创建dom树
+  createElm (vnode) {
+    const el = document.createElement(vnode.tag)
+    // 处理 props
+    if (vnode.props) {
+      for (const key in vnode.porps) {
+        el.setAttribute(key, vnode.props[key])
+      }
+    }
+    // 处理 children
+    if (vnode.children) {
+      // 处理文本
+      if (typeof vnode.children === 'string') {
+        el.textContent = vnode.children
+      } else {
+        // 子元素
+        vnode.children.forEach(vnode => {
+          const child = this.createElm(vnode)
+          el.appendChild(child)
+        })
+      }
+    }
+    // vnode 中保存dom
+    vnode.el = el
+    return el
+  }
+  // 更新孩子
+  updateChildren(parentElm, oldCh, newCh) {
+    const len = Math.min(oldCh.length, newCh.length)
+    // 遍历较短的那个子数组
+    for (let i = 0; i < len; i++) {
+      this.__patch__(oldCh[i], newCh[i])
+    }
+
+    // newCh若是更长的那个，新增
+    if (newCh.length > oldCh.length) {
+      newCh.slice(len).forEach(vnode => {
+        const el = this.createElm(vnode)
+        parentElm.appendChild(el)
+      })
+    } else if(newCh.length < oldCh.length){
+      oldCh.slice(len).forEach(vnode => {
+        parentElm.removeChild(vnode.el)
+      })
+    }
   }
 }
 // 将宿主的模板编译，获取它里面的动态内容，找到相关依赖并且生成watcher
